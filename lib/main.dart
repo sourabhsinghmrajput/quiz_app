@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/quiz_brain.dart';
+
+QuizBrain quizBrain = QuizBrain();
 
 void main() => runApp(MyApp());
 
@@ -26,12 +29,6 @@ class QuizApp extends StatefulWidget {
 
 class _QuizAppState extends State<QuizApp> {
   List<Icon> scorekeeper = [];
-  List<String> que = [
-    'Question first answer true..',
-    'Question second answer false..',
-    'Question third answer true..'
-  ];
-  int queno = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +42,7 @@ class _QuizAppState extends State<QuizApp> {
             flex: 5,
             child: Center(
               child: Text(
-                que[queno],
+                quizBrain.getQue(),
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ),
             ),
@@ -54,11 +51,26 @@ class _QuizAppState extends State<QuizApp> {
             flex: 1,
             child: Padding(
               padding: const EdgeInsets.all(15.0),
+              // ignore: deprecated_member_use
               child: FlatButton(
                 color: Colors.green,
                 onPressed: () {
+                  bool corrans = quizBrain.getAns();
                   setState(() {
-                    queno++;
+                    if (corrans == true) {
+                      print("Correct");
+                      scorekeeper.add(Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      ));
+                    } else {
+                      scorekeeper.add(Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ));
+                      print("Wrong !!");
+                    }
+                    quizBrain.nextQue();
                   });
                 },
                 child: Text(
@@ -71,9 +83,29 @@ class _QuizAppState extends State<QuizApp> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15.0),
+              // ignore: deprecated_member_use
               child: FlatButton(
                 color: Colors.red,
-                onPressed: () {},
+                onPressed: () {
+                  bool corrans = quizBrain.getAns();
+
+                  setState(() {
+                    if (corrans == false) {
+                      scorekeeper.add(Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      ));
+                      print("Correct");
+                    } else {
+                      scorekeeper.add(Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ));
+                      print("Wrong !!");
+                    }
+                    quizBrain.nextQue();
+                  });
+                },
                 child: Text(
                   'False',
                   style: TextStyle(color: Colors.white),
